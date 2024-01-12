@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		91947ABC2B51B31900CB78CA /* Pokedex in Frameworks */ = {isa = PBXBuildFile; productRef = 91947ABB2B51B31900CB78CA /* Pokedex */; };
 		91D71A592B51B1B3001A65EC /* PokedexApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D71A582B51B1B3001A65EC /* PokedexApp.swift */; };
 		91D71A5B2B51B1B3001A65EC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D71A5A2B51B1B3001A65EC /* ContentView.swift */; };
 		91D71A5D2B51B1B5001A65EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 91D71A5C2B51B1B5001A65EC /* Assets.xcassets */; };
@@ -15,8 +14,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9141322F2B51B40600817283 /* Pokedex */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Pokedex; sourceTree = "<group>"; };
 		91947AB82B51B27700CB78CA /* Pokedex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Pokedex.entitlements; sourceTree = "<group>"; };
-		91947AB92B51B2EB00CB78CA /* Pokedex */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pokedex; sourceTree = SOURCE_ROOT; };
 		91D71A552B51B1B3001A65EC /* Pokedex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pokedex.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		91D71A582B51B1B3001A65EC /* PokedexApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexApp.swift; sourceTree = "<group>"; };
 		91D71A5A2B51B1B3001A65EC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -29,7 +28,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				91947ABC2B51B31900CB78CA /* Pokedex in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +44,7 @@
 		91D71A4C2B51B1B3001A65EC = {
 			isa = PBXGroup;
 			children = (
+				9141322F2B51B40600817283 /* Pokedex */,
 				91D71A572B51B1B3001A65EC /* PokedexApp */,
 				91D71A562B51B1B3001A65EC /* Products */,
 				91947ABA2B51B31900CB78CA /* Frameworks */,
@@ -63,7 +62,6 @@
 		91D71A572B51B1B3001A65EC /* PokedexApp */ = {
 			isa = PBXGroup;
 			children = (
-				91947AB92B51B2EB00CB78CA /* Pokedex */,
 				91D71A582B51B1B3001A65EC /* PokedexApp.swift */,
 				91D71A5A2B51B1B3001A65EC /* ContentView.swift */,
 				91D71A5C2B51B1B5001A65EC /* Assets.xcassets */,
@@ -98,7 +96,6 @@
 			);
 			name = Pokedex;
 			packageProductDependencies = (
-				91947ABB2B51B31900CB78CA /* Pokedex */,
 			);
 			productName = Pokedex;
 			productReference = 91D71A552B51B1B3001A65EC /* Pokedex.app */;
@@ -310,7 +307,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = co.rhysmorgan.Pokedex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -350,7 +347,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = co.rhysmorgan.Pokedex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -380,13 +377,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		91947ABB2B51B31900CB78CA /* Pokedex */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Pokedex;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 91D71A4D2B51B1B3001A65EC /* Project object */;
 }
