@@ -5,15 +5,26 @@ import PackageDescription
 
 let package = Package(
   name: "Pokedex",
+  platforms: [
+    .iOS(.v17),
+    .macOS(.v14),
+    .watchOS(.v10)
+  ],
   products: [
     .library(
       name: "Pokedex",
       targets: ["Pokedex"]
     ),
   ],
+  dependencies: [
+    .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.6.0")
+  ],
   targets: [
     .target(
-      name: "Pokedex"
+      name: "Pokedex",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+      ]
     ),
     .testTarget(
       name: "PokedexTests",
