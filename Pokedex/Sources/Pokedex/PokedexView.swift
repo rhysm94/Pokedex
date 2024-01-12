@@ -17,5 +17,8 @@ public struct PokedexView: View {
 
   public var body: some View {
     Text("Hello, World!")
+      .task {
+        await store.send(.view(.initialise)).finish()
+      }
   }
 }

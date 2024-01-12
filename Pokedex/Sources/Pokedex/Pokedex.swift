@@ -14,12 +14,21 @@ public struct Pokedex {
   }
 
   public enum Action {
+    case view(ViewAction)
 
+    public enum ViewAction {
+      case initialise
+    }
   }
 
   public init() {}
 
   public var body: some ReducerOf<Self> {
-    EmptyReducer()
+    Reduce { state, action in
+      switch action {
+      case .view(.initialise):
+        return .none
+      }
+    }
   }
 }
