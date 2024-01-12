@@ -1,12 +1,21 @@
-import XCTest
-@testable import Pokedex
+//
+//  PokedexTests.swift
+//  PokedexTests
+//
+//  Created by Rhys Morgan on 12/01/2024.
+//
 
+import ComposableArchitecture
+import Pokedex
+import XCTest
+
+@MainActor
 final class PokedexTests: XCTestCase {
-  func testExample() throws {
-    // XCTest Documentation
-    // https://developer.apple.com/documentation/xctest
-    
-    // Defining Test Cases and Test Methods
-    // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
+  func testInitialise() async {
+    let store = TestStore(initialState: Pokedex.State()) {
+      Pokedex()
+    }
+
+    await store.send(.view(.initialise))
   }
 }
