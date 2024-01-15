@@ -38,6 +38,12 @@ let package = Package(
         "PokedexAPI"
       ]
     ),
+    .testTarget(
+      name: "PokemonListTests",
+      dependencies: [
+        "PokemonList"
+      ]
+    ),
     .target(
       name: "PokedexAPI",
       dependencies: [
