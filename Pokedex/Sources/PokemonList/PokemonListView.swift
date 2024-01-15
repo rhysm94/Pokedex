@@ -18,7 +18,7 @@ public struct PokemonListView: View {
   public var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
       List(viewStore.pokemon) { pokemon in
-        Text(pokemon.name)
+        PokemonListRow(pokemon: pokemon)
       }
     }
   }
@@ -38,14 +38,14 @@ public struct PokemonListView: View {
 
 private extension PokemonListEntry {
   static let mockData: IdentifiedArrayOf<Self> = [
-    PokemonListEntry(name: "Bulbasaur"),
-    PokemonListEntry(name: "Ivysaur"),
-    PokemonListEntry(name: "Venusaur"),
-    PokemonListEntry(name: "Charmander"),
-    PokemonListEntry(name: "Charmeleon"),
-    PokemonListEntry(name: "Charizard"),
-    PokemonListEntry(name: "Squirtle"),
-    PokemonListEntry(name: "Wartortle"),
-    PokemonListEntry(name: "Blastoise")
+    PokemonListEntry(name: "Bulbasaur", imageURL: nil),
+    PokemonListEntry(name: "Ivysaur", imageURL: nil),
+    PokemonListEntry(name: "Venusaur", imageURL: nil),
+    PokemonListEntry(name: "Charmander", imageURL: nil),
+    PokemonListEntry(name: "Charmeleon", imageURL: nil),
+    PokemonListEntry(name: "Charizard", imageURL: nil),
+    PokemonListEntry(name: "Squirtle", imageURL: nil),
+    PokemonListEntry(name: "Wartortle", imageURL: nil),
+    PokemonListEntry(name: "Blastoise", imageURL: nil)
   ]
 }
