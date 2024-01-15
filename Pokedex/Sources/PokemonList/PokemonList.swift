@@ -30,6 +30,7 @@ public struct PokemonList {
     public enum ViewAction {
       case initialise
       case didTapPokemon(PokemonListEntry.ID)
+      case dismissPresentedPokemon
     }
   }
 
@@ -59,6 +60,10 @@ public struct PokemonList {
       case let .view(.didTapPokemon(pokemonID)):
         guard let pokemon = state.pokemon[id: pokemonID] else { return .none }
         state.presentedPokemon = pokemon
+        return .none
+
+      case .view(.dismissPresentedPokemon):
+        state.presentedPokemon = nil
         return .none
       }
     }

@@ -32,7 +32,9 @@ public struct PokemonListRow: View {
     HStack {
       PokemonIconView(url: pokemon.imageURL)
       Text(pokemon.name)
+      Spacer()
     }
+    .contentShape(.rect)
   }
 }
 

@@ -28,6 +28,18 @@ public struct PokemonListView: View {
         .task {
           await viewStore.send(.initialise).finish()
         }
+        .navigationDestination(
+          isPresented: viewStore.binding(
+            get: { $0.presentedPokemon != nil },
+            send: .dismissPresentedPokemon
+          )
+        ) {
+          if let pokemon = viewStore.presentedPokemon {
+            VStack(alignment: .leading) {
+              Text(pokemon.name)
+            }
+          }
+        }
       }
       .buttonStyle(.plain)
       .navigationTitle("Pokémon")
