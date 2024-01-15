@@ -16,9 +16,17 @@ public struct PokedexView: View {
   }
 
   public var body: some View {
-    Text("Hello, World!")
+    WithViewStore(store, observe: { $0 }) { viewStore in
+      TabView(selection: viewStore.$currentTab) {
+        Text("Hello, World!")
+          .tag(Pokedex.State.Tab.pokemon)
+          .tabItem {
+            Text("Pokédex")
+          }
+      }
       .task {
         await store.send(.view(.initialise)).finish()
       }
+    }
   }
 }
