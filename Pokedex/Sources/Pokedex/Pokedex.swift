@@ -6,14 +6,21 @@
 //
 
 import ComposableArchitecture
+import PokemonList
 
 @Reducer
 public struct Pokedex {
   public struct State: Equatable {
     @BindingState public var currentTab: Tab
 
-    public init(currentTab: Tab = .pokemon) {
+    public var pokemonList: PokemonList.State
+
+    public init(
+      currentTab: Tab = .pokemon,
+      pokemonList: PokemonList.State = .init(pokemon: [])
+    ) {
       self.currentTab = currentTab
+      self.pokemonList = pokemonList
     }
 
     public enum Tab {
@@ -24,6 +31,8 @@ public struct Pokedex {
   public enum Action: BindableAction {
     case view(ViewAction)
     case binding(BindingAction<State>)
+
+    case pokemonList(PokemonList.Action)
 
     public enum ViewAction {
       case initialise
@@ -37,9 +46,13 @@ public struct Pokedex {
 
     Reduce { state, action in
       switch action {
-      case .binding:
-        return .none
       case .view(.initialise):
+        return .none
+
+      case .pokemonList:
+        return .none
+
+      case .binding:
         return .none
       }
     }

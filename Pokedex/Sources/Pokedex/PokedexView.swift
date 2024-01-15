@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import PokemonList
 import SwiftUI
 
 public struct PokedexView: View {
@@ -18,11 +19,13 @@ public struct PokedexView: View {
   public var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
       TabView(selection: viewStore.$currentTab) {
-        Text("Hello, World!")
-          .tag(Pokedex.State.Tab.pokemon)
-          .tabItem {
-            Text("Pokédex")
-          }
+        PokemonListView(
+          store: store.scope(state: \.pokemonList, action: \.pokemonList)
+        )
+        .tag(Pokedex.State.Tab.pokemon)
+        .tabItem {
+          Text("Pokédex")
+        }
       }
       .task {
         await store.send(.view(.initialise)).finish()

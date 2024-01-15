@@ -12,9 +12,14 @@ import Foundation
 public struct PokemonList {
   public struct State: Equatable {
     public var pokemon: IdentifiedArrayOf<PokemonListEntry>
+    public var presentedPokemon: PokemonListEntry?
 
-    public init(pokemon: IdentifiedArrayOf<PokemonListEntry>) {
+    public init(
+      pokemon: IdentifiedArrayOf<PokemonListEntry>,
+      presentedPokemon: PokemonListEntry? = nil
+    ) {
       self.pokemon = pokemon
+      self.presentedPokemon = presentedPokemon
     }
   }
 
@@ -23,6 +28,7 @@ public struct PokemonList {
 
     public enum ViewAction {
       case initialise
+      case didTapPokemon(PokemonListEntry.ID)
     }
   }
 
@@ -32,6 +38,11 @@ public struct PokemonList {
     Reduce { state, action in
       switch action {
       case .view(.initialise):
+        return .none
+
+      case let .view(.didTapPokemon(pokemonID)):
+        guard let pokemon = state.pokemon[id: pokemonID] else { return .none }
+        state.presentedPokemon = pokemon
         return .none
       }
     }

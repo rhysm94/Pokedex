@@ -16,24 +16,32 @@ public struct PokemonListView: View {
   }
 
   public var body: some View {
-    WithViewStore(store, observe: { $0 }) { viewStore in
+    WithViewStore(store, observe: { $0 }, send: { .view($0) }) { viewStore in
       List(viewStore.pokemon) { pokemon in
-        PokemonListRow(pokemon: pokemon)
+        Button {
+          viewStore.send(.didTapPokemon(pokemon.id))
+        } label: {
+          PokemonListRow(pokemon: pokemon)
+        }
+        .buttonStyle(.plain)
       }
     }
+    .navigationTitle("Pokémon")
   }
 }
 
 #Preview {
-  PokemonListView(
-    store: Store(
-      initialState: PokemonList.State(
-        pokemon: PokemonListEntry.mockData
-      )
-    ) {
-      PokemonList()
-    }
-  )
+  NavigationStack {
+    PokemonListView(
+      store: Store(
+        initialState: PokemonList.State(
+          pokemon: PokemonListEntry.mockData
+        )
+      ) {
+        PokemonList()
+      }
+    )
+  }
 }
 
 private extension PokemonListEntry {
