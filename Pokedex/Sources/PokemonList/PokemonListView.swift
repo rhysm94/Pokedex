@@ -16,17 +16,22 @@ public struct PokemonListView: View {
   }
 
   public var body: some View {
-    WithViewStore(store, observe: { $0 }, send: { .view($0) }) { viewStore in
-      List(viewStore.pokemon) { pokemon in
-        Button {
-          viewStore.send(.didTapPokemon(pokemon.id))
-        } label: {
-          PokemonListRow(pokemon: pokemon)
+    NavigationStack {
+      WithViewStore(store, observe: { $0 }, send: { .view($0) }) { viewStore in
+        List(viewStore.pokemon) { pokemon in
+          Button {
+            viewStore.send(.didTapPokemon(pokemon.id))
+          } label: {
+            PokemonListRow(pokemon: pokemon)
+          }
         }
-        .buttonStyle(.plain)
+        .task {
+          await viewStore.send(.initialise).finish()
+        }
       }
+      .buttonStyle(.plain)
+      .navigationTitle("Pokémon")
     }
-    .navigationTitle("Pokémon")
   }
 }
 
@@ -46,14 +51,14 @@ public struct PokemonListView: View {
 
 private extension PokemonListEntry {
   static let mockData: IdentifiedArrayOf<Self> = [
-    PokemonListEntry(name: "Bulbasaur", imageURL: nil),
-    PokemonListEntry(name: "Ivysaur", imageURL: nil),
-    PokemonListEntry(name: "Venusaur", imageURL: nil),
-    PokemonListEntry(name: "Charmander", imageURL: nil),
-    PokemonListEntry(name: "Charmeleon", imageURL: nil),
-    PokemonListEntry(name: "Charizard", imageURL: nil),
-    PokemonListEntry(name: "Squirtle", imageURL: nil),
-    PokemonListEntry(name: "Wartortle", imageURL: nil),
-    PokemonListEntry(name: "Blastoise", imageURL: nil)
+    PokemonListEntry(id: 1, name: "Bulbasaur", imageURL: nil),
+    PokemonListEntry(id: 2, name: "Ivysaur", imageURL: nil),
+    PokemonListEntry(id: 3, name: "Venusaur", imageURL: nil),
+    PokemonListEntry(id: 4, name: "Charmander", imageURL: nil),
+    PokemonListEntry(id: 5, name: "Charmeleon", imageURL: nil),
+    PokemonListEntry(id: 6, name: "Charizard", imageURL: nil),
+    PokemonListEntry(id: 7, name: "Squirtle", imageURL: nil),
+    PokemonListEntry(id: 8, name: "Wartortle", imageURL: nil),
+    PokemonListEntry(id: 9, name: "Blastoise", imageURL: nil)
   ]
 }

@@ -44,6 +44,10 @@ public struct Pokedex {
   public var body: some ReducerOf<Self> {
     BindingReducer()
 
+    Scope(state: \.pokemonList, action: \.pokemonList) {
+      PokemonList()
+    }
+
     Reduce { state, action in
       switch action {
       case .view(.initialise):

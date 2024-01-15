@@ -34,7 +34,8 @@ let package = Package(
     .target(
       name: "PokemonList",
       dependencies: [
-        .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        "PokedexAPI"
       ]
     ),
     .target(

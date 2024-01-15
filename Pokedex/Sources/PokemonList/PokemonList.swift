@@ -6,7 +6,7 @@
 //
 
 import ComposableArchitecture
-import Foundation
+import PokedexAPI
 
 @Reducer
 public struct PokemonList {
@@ -25,6 +25,7 @@ public struct PokemonList {
 
   public enum Action {
     case view(ViewAction)
+    case didReceivePokemon(Result<[Pokemon], Error>)
 
     public enum ViewAction {
       case initialise
@@ -34,10 +35,25 @@ public struct PokemonList {
 
   public init() {}
 
+  @Dependency(\.apiClient) var apiClient
+
   public var body: some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .view(.initialise):
+        return .run { send in
+          await send(
+            .didReceivePokemon(
+              Result { try await apiClient.getAllPokemon() }
+            )
+          )
+        }
+
+      case .didReceivePokemon(.failure):
+        return .none
+
+      case let .didReceivePokemon(.success(pokemon)):
+        state.pokemon = IdentifiedArray(uniqueElements: pokemon.map(PokemonListEntry.init))
         return .none
 
       case let .view(.didTapPokemon(pokemonID)):
@@ -46,5 +62,11 @@ public struct PokemonList {
         return .none
       }
     }
+  }
+}
+
+private extension PokemonListEntry {
+  init(pokemon: Pokemon) {
+    self.init(id: pokemon.id, name: pokemon.name, imageURL: pokemon.thumbnailURL)
   }
 }

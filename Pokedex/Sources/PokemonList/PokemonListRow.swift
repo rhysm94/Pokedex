@@ -10,20 +10,12 @@ import Foundation
 import SwiftUI
 
 public struct PokemonListEntry: Identifiable, Hashable {
-  public var id: UUID
+  public var id: Int
   public var name: String
   public var imageURL: URL?
 
-  public init(id: UUID, name: String, imageURL: URL? = nil) {
+  public init(id: Int, name: String, imageURL: URL? = nil) {
     self.id = id
-    self.name = name
-    self.imageURL = imageURL
-  }
-
-  public init(name: String, imageURL: URL? = nil) {
-    @Dependency(\.uuid) var uuid
-
-    self.id = uuid()
     self.name = name
     self.imageURL = imageURL
   }
