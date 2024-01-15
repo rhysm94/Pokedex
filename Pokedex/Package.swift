@@ -12,10 +12,12 @@ let package = Package(
   ],
   products: [
     .library(name: "Pokedex", targets: ["Pokedex"]),
-    .library(name: "PokemonList", targets: ["PokemonList"])
+    .library(name: "PokemonList", targets: ["PokemonList"]),
+    .library(name: "PokedexAPI", targets: ["PokedexAPI"])
   ],
   dependencies: [
-    .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.6.0")
+    .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.6.0"),
+    .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.1.0")
   ],
   targets: [
     .target(
@@ -33,6 +35,13 @@ let package = Package(
       name: "PokemonList",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+      ]
+    ),
+    .target(
+      name: "PokedexAPI",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "DependenciesMacros", package: "swift-dependencies"),
       ]
     )
   ]
