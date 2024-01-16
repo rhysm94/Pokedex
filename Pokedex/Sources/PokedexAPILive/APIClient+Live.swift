@@ -26,10 +26,50 @@ extension APIClient: DependencyKey {
             return nil
           }
 
-          let spriteURL = URL(string: "https://img.pokemondb.net/sprites/home/normal/\(species.name).png")
-
-          return Pokemon(id: species.id, name: name, thumbnailURL: spriteURL)
+          return Pokemon(id: species.id, name: name, thumbnailURL: spriteURL(for: species.name))
         }
+      },
+      getPokemon: { pokemonID in
+        let getPokemon = try await apolloClient.fetch(
+          query: GetPokemonQuery(pokemonID: pokemonID),
+          cachePolicy: .returnCacheDataElseFetch
+        )
+
+        guard let name = getPokemon.pokemon?.name.first?.name else {
+          throw ApolloError.missingData
+        }
+
+        guard let pokemonData = getPokemon.pokemon?.pokemon_data.first else {
+          throw ApolloError.missingData
+        }
+
+        let types = try extractTypes(from: pokemonData.types)
+
+        let abilities = try pokemonData.abilities.compactMap { ability in
+          guard let name = ability.name?.name else { throw ApolloError.missingData }
+          return Ability(id: ability.id, name: name)
+        }
+
+        let moves = try pokemonData.moves.compactMap { move in
+          guard
+            let name = move.move?.name.first?.name,
+            let typeName = move.move?.type?.pokemon_v2_typenames.first?.name,
+            let type = PokemonType(rawValue: typeName)
+          else { throw ApolloError.missingData }
+
+          return Move(id: move.id, name: name, type: type)
+        }
+
+        return try FullPokemon(
+          id: pokemonID,
+          name: name,
+          evolvesFrom: getPokemon.pokemon?.evolves_from_species_id,
+          evolutionChain: FullPokemon.EvolutionChain(data: getPokemon),
+          typeOne: types.typeOne,
+          typeTwo: types.typeTwo,
+          abilities: abilities,
+          moves: moves
+        )
       },
       getAllAbilities: {
         let getAllAbilities = try await apolloClient.fetch(
@@ -49,6 +89,37 @@ extension APIClient: DependencyKey {
   }
 }
 
+private func spriteURL(for pokemonSpecies: String) -> URL? {
+  URL(string: "https://img.pokemondb.net/sprites/home/normal/\(pokemonSpecies).png")
+}
+
+private extension FullPokemon.EvolutionChain {
+  init(data: GetPokemonQuery.Data) throws {
+    guard let chain = data.pokemon?.evolution_chain else {
+      throw ApolloError.missingData
+    }
+
+    let chainSpecies: [Pokemon] = try chain.species.reduce(into: []) { partialResult, specy in
+      guard let name = specy.pokemon_v2_pokemonspeciesnames.first?.name else { throw ApolloError.missingData }
+      partialResult.append(
+        Pokemon(id: specy.id, name: name, thumbnailURL: spriteURL(for: name))
+      )
+    }
+
+    self.init(id: chain.id, species: chainSpecies)
+  }
+}
+
+private func extractTypes(from types: [GetPokemonQuery.Data.Pokemon.Pokemon_datum.Type_SelectionSet]) throws -> (typeOne: PokemonType, typeTwo: PokemonType?) {
+  let types = types
+    .compactMap { $0.type?.name.first?.name }
+    .compactMap(PokemonType.init(rawValue:))
+
+  guard let first = types.first else { throw ApolloError.missingData }
+  return (first, types.dropFirst().first)
+}
+
 enum ApolloError: Error {
   case unexpectedError
+  case missingData
 }
