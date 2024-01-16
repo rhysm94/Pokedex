@@ -27,6 +27,14 @@ public struct ViewPokemonView: View {
         }
 
         if let fullData = viewStore.fullData {
+          if fullData.evolutionChain.species.count > 1 {
+            Section("Evolutions") {
+              EvolutionChainView(chain: fullData.evolutionChain) { pokemonID in
+                print("Did Tap \(pokemonID)")
+              }
+            }
+          }
+
           Section("Abilities") {
             ForEach(fullData.abilities, id: \.id) { ability in
               Text(ability.name)
@@ -39,8 +47,12 @@ public struct ViewPokemonView: View {
             }
           }
         } else {
-          ProgressView()
-            .progressViewStyle(.circular)
+          HStack {
+            Spacer()
+            ProgressView()
+              .progressViewStyle(.circular)
+            Spacer()
+          }
         }
       }
       .navigationTitle(viewStore.name)
@@ -59,6 +71,7 @@ struct ViewState: Equatable {
   var fullData: FullData?
 
   struct FullData: Equatable {
+    var evolutionChain: FullPokemon.EvolutionChain
     var abilities: [Ability]
     var moves: [Move]
   }
@@ -79,6 +92,7 @@ struct ViewState: Equatable {
       self.imageURL = fullPokemon.imageURL
 
       self.fullData = FullData(
+        evolutionChain: fullPokemon.evolutionChain,
         abilities: fullPokemon.abilities,
         moves: fullPokemon.moves
       )
@@ -92,7 +106,13 @@ struct ViewState: Equatable {
   NavigationStack {
     ViewPokemonView(
       store: Store(
-        initialState: ViewPokemon.State.loading(Pokemon(id: 1, name: "Bulbasaur", thumbnailURL: nil))
+        initialState: ViewPokemon.State.loading(
+          Pokemon(
+            id: 1,
+            name: "Bulbasaur",
+            thumbnailURL: URL(string: "https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png")
+          )
+        )
       ) {
         ViewPokemon()
       } withDependencies: {
@@ -105,8 +125,21 @@ struct ViewState: Equatable {
             evolutionChain: FullPokemon.EvolutionChain(
               id: 1,
               species: [
-                Pokemon(id: 2, name: "Ivysaur", thumbnailURL: nil),
-                Pokemon(id: 3, name: "Venusaur", thumbnailURL: nil)
+                Pokemon(
+                  id: 1,
+                  name: "Bulbasaur",
+                  thumbnailURL: URL(string: "https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png")
+                ),
+                Pokemon(
+                  id: 2,
+                  name: "Ivysaur",
+                  thumbnailURL: URL(string: "https://img.pokemondb.net/sprites/scarlet-violet/normal/ivysaur.png")
+                ),
+                Pokemon(
+                  id: 3,
+                  name: "Venusaur",
+                  thumbnailURL: URL(string: "https://img.pokemondb.net/sprites/scarlet-violet/normal/venusaur.png")
+                )
               ]
             ),
             typeOne: .grass,
@@ -115,7 +148,7 @@ struct ViewState: Equatable {
             moves: [
               Move(id: 1, name: "Tackle", type: .normal)
             ],
-            imageURL: nil
+            imageURL: URL(string: "https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png")
           )
         }
       }

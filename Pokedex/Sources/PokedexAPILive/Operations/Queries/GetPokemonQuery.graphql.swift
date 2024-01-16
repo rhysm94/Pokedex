@@ -7,7 +7,7 @@ public class GetPokemonQuery: GraphQLQuery {
   public static let operationName: String = "GetPokemon"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query GetPokemon($pokemonID: Int!) { pokemon: pokemon_v2_pokemonspecies_by_pk(id: $pokemonID) { __typename id name evolves_from_species_id pokemonName: pokemon_v2_pokemonspeciesnames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename name } evolutionChain: pokemon_v2_evolutionchain { __typename id species: pokemon_v2_pokemonspecies { __typename id speciesNames: pokemon_v2_pokemonspeciesnames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename name } } } pokemonData: pokemon_v2_pokemons { __typename types: pokemon_v2_pokemontypes { __typename type: pokemon_v2_type { __typename name: pokemon_v2_typenames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename name } } } abilities: pokemon_v2_pokemonabilities { __typename id name: pokemon_v2_ability { __typename id name } is_hidden } moves: pokemon_v2_pokemonmoves { __typename id version_group: pokemon_v2_versiongroup { __typename id name } move: pokemon_v2_move { __typename name: pokemon_v2_movenames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename id name } type: pokemon_v2_type { __typename pokemon_v2_typenames(where: { pokemon_v2_language: { iso639: { _eq: "en" } } }) { __typename name } } } } } } }"#
+      #"query GetPokemon($pokemonID: Int!) { pokemon: pokemon_v2_pokemonspecies_by_pk(id: $pokemonID) { __typename id name evolves_from_species_id pokemonName: pokemon_v2_pokemonspeciesnames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename name } evolutionChain: pokemon_v2_evolutionchain { __typename id species: pokemon_v2_pokemonspecies { __typename id name speciesNames: pokemon_v2_pokemonspeciesnames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename name } } } pokemonData: pokemon_v2_pokemons { __typename types: pokemon_v2_pokemontypes { __typename type: pokemon_v2_type { __typename name: pokemon_v2_typenames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename name } } } abilities: pokemon_v2_pokemonabilities { __typename id name: pokemon_v2_ability { __typename id name } is_hidden } moves: pokemon_v2_pokemonmoves { __typename id version_group: pokemon_v2_versiongroup { __typename id name } move: pokemon_v2_move { __typename name: pokemon_v2_movenames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename id name } type: pokemon_v2_type { __typename pokemon_v2_typenames(where: { pokemon_v2_language: { iso639: { _eq: "en" } } }) { __typename name } } } } } } }"#
     ))
 
   public var pokemonID: Int
@@ -103,10 +103,12 @@ public class GetPokemonQuery: GraphQLQuery {
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("id", Int.self),
+            .field("name", String.self),
             .field("pokemon_v2_pokemonspeciesnames", alias: "speciesNames", [SpeciesName].self, arguments: ["where": ["pokemon_v2_language": ["iso639": ["_eq": "en"]]]]),
           ] }
 
           public var id: Int { __data["id"] }
+          public var name: String { __data["name"] }
           /// An array relationship
           public var speciesNames: [SpeciesName] { __data["speciesNames"] }
 

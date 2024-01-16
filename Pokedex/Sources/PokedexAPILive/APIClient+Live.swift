@@ -104,12 +104,12 @@ private extension FullPokemon.EvolutionChain {
       throw ApolloError.missingData
     }
 
-    let chainSpecies: [Pokemon] = try chain.species.reduce(into: []) { partialResult, specy in
-      guard let name = specy.speciesNames.first?.name else { throw ApolloError.missingData }
+    let chainSpecies: [Pokemon] = try chain.species.reduce(into: []) { partialResult, species in
+      guard let name = species.speciesNames.first?.name else { throw ApolloError.missingData }
       partialResult.append(
-        Pokemon(id: specy.id, name: name, thumbnailURL: spriteURL(for: name))
+        Pokemon(id: species.id, name: name, thumbnailURL: spriteURL(for: species.name))
       )
-    }
+    }.sorted(by: { $0.id < $1.id })
 
     self.init(id: chain.id, species: chainSpecies)
   }
