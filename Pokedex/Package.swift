@@ -39,7 +39,8 @@ let package = Package(
       name: "PokemonList",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-        "PokedexAPI"
+        "PokedexAPI",
+        "ViewPokemon"
       ]
     ),
     .testTarget(

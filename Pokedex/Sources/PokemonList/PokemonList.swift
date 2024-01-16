@@ -7,16 +7,17 @@
 
 import ComposableArchitecture
 import PokedexAPI
+import ViewPokemon
 
 @Reducer
 public struct PokemonList {
   public struct State: Equatable {
     public var pokemon: IdentifiedArrayOf<PokemonListEntry>
-    public var presentedPokemon: PokemonListEntry?
+    @PresentationState public var presentedPokemon: ViewPokemon.State?
 
     public init(
       pokemon: IdentifiedArrayOf<PokemonListEntry>,
-      presentedPokemon: PokemonListEntry? = nil
+      presentedPokemon: ViewPokemon.State? = nil
     ) {
       self.pokemon = pokemon
       self.presentedPokemon = presentedPokemon
@@ -26,11 +27,11 @@ public struct PokemonList {
   public enum Action {
     case view(ViewAction)
     case didReceivePokemon(Result<[Pokemon], Error>)
+    case viewPokemon(PresentationAction<ViewPokemon.Action>)
 
     public enum ViewAction {
       case initialise
       case didTapPokemon(PokemonListEntry.ID)
-      case dismissPresentedPokemon
     }
   }
 
@@ -59,13 +60,15 @@ public struct PokemonList {
 
       case let .view(.didTapPokemon(pokemonID)):
         guard let pokemon = state.pokemon[id: pokemonID] else { return .none }
-        state.presentedPokemon = pokemon
+        state.presentedPokemon = .loading(Pokemon(id: pokemonID, name: pokemon.name, thumbnailURL: pokemon.imageURL))
         return .none
 
-      case .view(.dismissPresentedPokemon):
-        state.presentedPokemon = nil
+      case .viewPokemon:
         return .none
       }
+    }
+    .ifLet(\.$presentedPokemon, action: \.viewPokemon) {
+      ViewPokemon()
     }
   }
 }

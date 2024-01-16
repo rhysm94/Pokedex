@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import SwiftUI
+import ViewPokemon
 
 public struct PokemonListView: View {
   public let store: StoreOf<PokemonList>
@@ -29,17 +30,9 @@ public struct PokemonListView: View {
           await viewStore.send(.initialise).finish()
         }
         .navigationDestination(
-          isPresented: viewStore.binding(
-            get: { $0.presentedPokemon != nil },
-            send: .dismissPresentedPokemon
-          )
-        ) {
-          if let pokemon = viewStore.presentedPokemon {
-            VStack(alignment: .leading) {
-              Text(pokemon.name)
-            }
-          }
-        }
+          store: store.scope(state: \.$presentedPokemon, action: \.viewPokemon),
+          destination: ViewPokemonView.init
+        )
       }
       .buttonStyle(.plain)
       .navigationTitle("Pokémon")
