@@ -10,7 +10,29 @@ import PokedexAPI
 
 @Reducer
 public struct ViewPokemon {
-  public enum State: Hashable {
+  public struct State: Hashable {
+    public var loadingState: LoadingState
+    @PresentationState public var nested: ViewPokemon.State?
+
+    var pokemonID: Int {
+      switch loadingState {
+      case .loading(let pokemon):
+        pokemon.id
+      case .loaded(let fullPokemon):
+        fullPokemon.id
+      }
+    }
+
+    public init(
+      loadingState: LoadingState,
+      nested: ViewPokemon.State? = nil
+    ) {
+      self.loadingState = loadingState
+      self.nested = nested
+    }
+  }
+
+  public enum LoadingState: Hashable {
     case loading(Pokemon)
     case loaded(FullPokemon)
   }
@@ -18,9 +40,11 @@ public struct ViewPokemon {
   public enum Action {
     case view(ViewAction)
     case receiveFullPokemon(Result<FullPokemon, Error>)
+    indirect case viewPokemon(PresentationAction<Action>)
 
     public enum ViewAction {
       case initialise
+      case didTapPokemon(Int)
     }
   }
 
@@ -30,8 +54,9 @@ public struct ViewPokemon {
 
   public var body: some ReducerOf<Self> {
     Reduce { state, action in
-      switch (state, action) {
-      case let (.loading(pokemon), .view(.initialise)):
+      switch action {
+      case .view(.initialise):
+        guard case let .loading(pokemon) = state.loadingState else { return .none }
         return .run { send in
           await send(
             .receiveFullPokemon(
@@ -40,17 +65,32 @@ public struct ViewPokemon {
           )
         }
 
-      case (_, .view(.initialise)):
+      case let .view(.didTapPokemon(tappedID)):
+        guard
+          state.pokemonID != tappedID,
+          case let .loaded(pokemon) = state.loadingState,
+          let tappedPokemon = pokemon.evolutionChain.species.first(where: { $0.id == tappedID })
+        else {
+          return .none
+        }
+
+        state.nested = .init(loadingState: .loading(tappedPokemon))
         return .none
 
-      case let (_, .receiveFullPokemon(.success(pokemon))):
-        state = .loaded(pokemon)
+      case let .receiveFullPokemon(.success(pokemon)):
+        state.loadingState = .loaded(pokemon)
         return .none
 
-      case let (_, .receiveFullPokemon(.failure(error))):
+      case let .receiveFullPokemon(.failure(error)):
         print(error.localizedDescription)
         return .none
+
+      case .viewPokemon:
+        return .none
       }
+    }
+    .ifLet(\.$nested, action: \.viewPokemon) {
+      ViewPokemon()
     }
   }
 }

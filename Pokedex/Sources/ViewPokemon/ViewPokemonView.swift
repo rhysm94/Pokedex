@@ -30,7 +30,7 @@ public struct ViewPokemonView: View {
           if fullData.evolutionChain.species.count > 1 {
             Section("Evolutions") {
               EvolutionChainView(chain: fullData.evolutionChain) { pokemonID in
-                print("Did Tap \(pokemonID)")
+                viewStore.send(.didTapPokemon(pokemonID))
               }
             }
           }
@@ -60,6 +60,10 @@ public struct ViewPokemonView: View {
         await viewStore.send(.initialise).finish()
       }
     }
+    .navigationDestination(
+      store: store.scope(state: \.$nested, action: \.viewPokemon),
+      destination: ViewPokemonView.init
+    )
   }
 }
 
@@ -81,7 +85,7 @@ struct ViewState: Equatable {
   }
 
   init(state: ViewPokemon.State) {
-    switch state {
+    switch state.loadingState {
     case .loading(let pokemon):
       self.pokedexNumber = Self.pokedexNumber(pokemon.id)
       self.name = pokemon.name
@@ -100,17 +104,17 @@ struct ViewState: Equatable {
   }
 }
 
-
-
 #Preview {
   NavigationStack {
     ViewPokemonView(
       store: Store(
-        initialState: ViewPokemon.State.loading(
-          Pokemon(
-            id: 1,
-            name: "Bulbasaur",
-            thumbnailURL: URL(string: "https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png")
+        initialState: ViewPokemon.State(
+          loadingState: .loading(
+            Pokemon(
+              id: 1,
+              name: "Bulbasaur",
+              thumbnailURL: URL(string: "https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png")
+            )
           )
         )
       ) {

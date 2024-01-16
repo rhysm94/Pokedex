@@ -60,7 +60,11 @@ public struct PokemonList {
 
       case let .view(.didTapPokemon(pokemonID)):
         guard let pokemon = state.pokemon[id: pokemonID] else { return .none }
-        state.presentedPokemon = .loading(Pokemon(id: pokemonID, name: pokemon.name, thumbnailURL: pokemon.imageURL))
+        state.presentedPokemon = .init(
+          loadingState: .loading(
+            Pokemon(id: pokemonID, name: pokemon.name, thumbnailURL: pokemon.imageURL)
+          )
+        )
         return .none
 
       case .viewPokemon:
