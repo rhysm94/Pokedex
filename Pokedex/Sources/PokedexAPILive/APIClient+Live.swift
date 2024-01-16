@@ -35,19 +35,23 @@ extension APIClient: DependencyKey {
           cachePolicy: .returnCacheDataElseFetch
         )
 
-        guard let name = getPokemon.pokemon?.name.first?.name else {
+        guard let pokemon = getPokemon.pokemon else {
           throw ApolloError.missingData
         }
 
-        guard let pokemonData = getPokemon.pokemon?.pokemon_data.first else {
+        guard let name = pokemon.pokemonName.first?.name else {
+          throw ApolloError.missingData
+        }
+
+        guard let pokemonData = pokemon.pokemonData.first else {
           throw ApolloError.missingData
         }
 
         let types = try extractTypes(from: pokemonData.types)
 
         let abilities = try pokemonData.abilities.compactMap { ability in
-          guard let name = ability.name?.name else { throw ApolloError.missingData }
-          return Ability(id: ability.id, name: name)
+          guard let name = ability.name?.name.first?.name else { throw ApolloError.missingData }
+          return Ability(id: ability.id, name: name, isHidden: ability.is_hidden)
         }
 
         let moves = try pokemonData.moves.compactMap { move in
@@ -68,7 +72,8 @@ extension APIClient: DependencyKey {
           typeOne: types.typeOne,
           typeTwo: types.typeTwo,
           abilities: abilities,
-          moves: moves
+          moves: moves,
+          imageURL: spriteURL(for: pokemon.name)
         )
       },
       getAllAbilities: {
@@ -82,7 +87,7 @@ extension APIClient: DependencyKey {
             return nil
           }
 
-          return Ability(id: ability.id, name: name)
+          return Ability(id: ability.id, name: name, isHidden: false)
         }
       }
     )
@@ -95,22 +100,22 @@ private func spriteURL(for pokemonSpecies: String) -> URL? {
 
 private extension FullPokemon.EvolutionChain {
   init(data: GetPokemonQuery.Data) throws {
-    guard let chain = data.pokemon?.evolution_chain else {
+    guard let chain = data.pokemon?.evolutionChain else {
       throw ApolloError.missingData
     }
 
-    let chainSpecies: [Pokemon] = try chain.species.reduce(into: []) { partialResult, specy in
-      guard let name = specy.pokemon_v2_pokemonspeciesnames.first?.name else { throw ApolloError.missingData }
+    let chainSpecies: [Pokemon] = try chain.species.reduce(into: []) { partialResult, species in
+      guard let name = species.speciesNames.first?.name else { throw ApolloError.missingData }
       partialResult.append(
-        Pokemon(id: specy.id, name: name, thumbnailURL: spriteURL(for: name))
+        Pokemon(id: species.id, name: name, thumbnailURL: spriteURL(for: species.name))
       )
-    }
+    }.sorted(by: { $0.id < $1.id })
 
     self.init(id: chain.id, species: chainSpecies)
   }
 }
 
-private func extractTypes(from types: [GetPokemonQuery.Data.Pokemon.Pokemon_datum.Type_SelectionSet]) throws -> (typeOne: PokemonType, typeTwo: PokemonType?) {
+private func extractTypes(from types: [GetPokemonQuery.Data.Pokemon.PokemonDatum.Type_SelectionSet]) throws -> (typeOne: PokemonType, typeTwo: PokemonType?) {
   let types = types
     .compactMap { $0.type?.name.first?.name }
     .compactMap(PokemonType.init(rawValue:))

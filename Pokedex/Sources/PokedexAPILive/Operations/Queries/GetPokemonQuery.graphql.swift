@@ -7,7 +7,7 @@ public class GetPokemonQuery: GraphQLQuery {
   public static let operationName: String = "GetPokemon"
   public static let operationDocument: ApolloAPI.OperationDocument = .init(
     definition: .init(
-      #"query GetPokemon($pokemonID: Int!) { pokemon: pokemon_v2_pokemonspecies_by_pk(id: $pokemonID) { __typename evolves_from_species_id name: pokemon_v2_pokemonspeciesnames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename name } evolution_chain: pokemon_v2_evolutionchain { __typename id species: pokemon_v2_pokemonspecies { __typename id pokemon_v2_pokemonspeciesnames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename name } } } pokemon_data: pokemon_v2_pokemons { __typename types: pokemon_v2_pokemontypes { __typename type: pokemon_v2_type { __typename name: pokemon_v2_typenames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename name } } } abilities: pokemon_v2_pokemonabilities { __typename id name: pokemon_v2_ability { __typename id name } is_hidden } moves: pokemon_v2_pokemonmoves { __typename id version_group: pokemon_v2_versiongroup { __typename id name } move: pokemon_v2_move { __typename name: pokemon_v2_movenames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename id name } type: pokemon_v2_type { __typename pokemon_v2_typenames(where: { pokemon_v2_language: { iso639: { _eq: "en" } } }) { __typename name } } } } } } }"#
+      #"query GetPokemon($pokemonID: Int!) { pokemon: pokemon_v2_pokemonspecies_by_pk(id: $pokemonID) { __typename id name evolves_from_species_id pokemonName: pokemon_v2_pokemonspeciesnames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename name } evolutionChain: pokemon_v2_evolutionchain { __typename id species: pokemon_v2_pokemonspecies { __typename id name speciesNames: pokemon_v2_pokemonspeciesnames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename name } } } pokemonData: pokemon_v2_pokemons { __typename types: pokemon_v2_pokemontypes { __typename type: pokemon_v2_type { __typename name: pokemon_v2_typenames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename name } } } abilities: pokemon_v2_pokemonabilities { __typename id name: pokemon_v2_ability { __typename id name: pokemon_v2_abilitynames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename name } } is_hidden } moves: pokemon_v2_pokemonmoves { __typename id version_group: pokemon_v2_versiongroup { __typename id name } move: pokemon_v2_move { __typename name: pokemon_v2_movenames( where: { pokemon_v2_language: { iso639: { _eq: "en" } } } ) { __typename id name } type: pokemon_v2_type { __typename pokemon_v2_typenames(where: { pokemon_v2_language: { iso639: { _eq: "en" } } }) { __typename name } } } } } } }"#
     ))
 
   public var pokemonID: Int
@@ -40,24 +40,28 @@ public class GetPokemonQuery: GraphQLQuery {
       public static var __parentType: ApolloAPI.ParentType { PokedexAPILive.Objects.Pokemon_v2_pokemonspecies }
       public static var __selections: [ApolloAPI.Selection] { [
         .field("__typename", String.self),
+        .field("id", Int.self),
+        .field("name", String.self),
         .field("evolves_from_species_id", Int?.self),
-        .field("pokemon_v2_pokemonspeciesnames", alias: "name", [Name].self, arguments: ["where": ["pokemon_v2_language": ["iso639": ["_eq": "en"]]]]),
-        .field("pokemon_v2_evolutionchain", alias: "evolution_chain", Evolution_chain?.self),
-        .field("pokemon_v2_pokemons", alias: "pokemon_data", [Pokemon_datum].self),
+        .field("pokemon_v2_pokemonspeciesnames", alias: "pokemonName", [PokemonName].self, arguments: ["where": ["pokemon_v2_language": ["iso639": ["_eq": "en"]]]]),
+        .field("pokemon_v2_evolutionchain", alias: "evolutionChain", EvolutionChain?.self),
+        .field("pokemon_v2_pokemons", alias: "pokemonData", [PokemonDatum].self),
       ] }
 
+      public var id: Int { __data["id"] }
+      public var name: String { __data["name"] }
       public var evolves_from_species_id: Int? { __data["evolves_from_species_id"] }
       /// An array relationship
-      public var name: [Name] { __data["name"] }
+      public var pokemonName: [PokemonName] { __data["pokemonName"] }
       /// An object relationship
-      public var evolution_chain: Evolution_chain? { __data["evolution_chain"] }
+      public var evolutionChain: EvolutionChain? { __data["evolutionChain"] }
       /// An array relationship
-      public var pokemon_data: [Pokemon_datum] { __data["pokemon_data"] }
+      public var pokemonData: [PokemonDatum] { __data["pokemonData"] }
 
-      /// Pokemon.Name
+      /// Pokemon.PokemonName
       ///
       /// Parent Type: `Pokemon_v2_pokemonspeciesname`
-      public struct Name: PokedexAPILive.SelectionSet {
+      public struct PokemonName: PokedexAPILive.SelectionSet {
         public let __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
@@ -70,10 +74,10 @@ public class GetPokemonQuery: GraphQLQuery {
         public var name: String { __data["name"] }
       }
 
-      /// Pokemon.Evolution_chain
+      /// Pokemon.EvolutionChain
       ///
       /// Parent Type: `Pokemon_v2_evolutionchain`
-      public struct Evolution_chain: PokedexAPILive.SelectionSet {
+      public struct EvolutionChain: PokedexAPILive.SelectionSet {
         public let __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
@@ -88,7 +92,7 @@ public class GetPokemonQuery: GraphQLQuery {
         /// An array relationship
         public var species: [Specy] { __data["species"] }
 
-        /// Pokemon.Evolution_chain.Specy
+        /// Pokemon.EvolutionChain.Specy
         ///
         /// Parent Type: `Pokemon_v2_pokemonspecies`
         public struct Specy: PokedexAPILive.SelectionSet {
@@ -99,17 +103,19 @@ public class GetPokemonQuery: GraphQLQuery {
           public static var __selections: [ApolloAPI.Selection] { [
             .field("__typename", String.self),
             .field("id", Int.self),
-            .field("pokemon_v2_pokemonspeciesnames", [Pokemon_v2_pokemonspeciesname].self, arguments: ["where": ["pokemon_v2_language": ["iso639": ["_eq": "en"]]]]),
+            .field("name", String.self),
+            .field("pokemon_v2_pokemonspeciesnames", alias: "speciesNames", [SpeciesName].self, arguments: ["where": ["pokemon_v2_language": ["iso639": ["_eq": "en"]]]]),
           ] }
 
           public var id: Int { __data["id"] }
+          public var name: String { __data["name"] }
           /// An array relationship
-          public var pokemon_v2_pokemonspeciesnames: [Pokemon_v2_pokemonspeciesname] { __data["pokemon_v2_pokemonspeciesnames"] }
+          public var speciesNames: [SpeciesName] { __data["speciesNames"] }
 
-          /// Pokemon.Evolution_chain.Specy.Pokemon_v2_pokemonspeciesname
+          /// Pokemon.EvolutionChain.Specy.SpeciesName
           ///
           /// Parent Type: `Pokemon_v2_pokemonspeciesname`
-          public struct Pokemon_v2_pokemonspeciesname: PokedexAPILive.SelectionSet {
+          public struct SpeciesName: PokedexAPILive.SelectionSet {
             public let __data: DataDict
             public init(_dataDict: DataDict) { __data = _dataDict }
 
@@ -124,10 +130,10 @@ public class GetPokemonQuery: GraphQLQuery {
         }
       }
 
-      /// Pokemon.Pokemon_datum
+      /// Pokemon.PokemonDatum
       ///
       /// Parent Type: `Pokemon_v2_pokemon`
-      public struct Pokemon_datum: PokedexAPILive.SelectionSet {
+      public struct PokemonDatum: PokedexAPILive.SelectionSet {
         public let __data: DataDict
         public init(_dataDict: DataDict) { __data = _dataDict }
 
@@ -146,7 +152,7 @@ public class GetPokemonQuery: GraphQLQuery {
         /// An array relationship
         public var moves: [Move] { __data["moves"] }
 
-        /// Pokemon.Pokemon_datum.Type_SelectionSet
+        /// Pokemon.PokemonDatum.Type_SelectionSet
         ///
         /// Parent Type: `Pokemon_v2_pokemontype`
         public struct Type_SelectionSet: PokedexAPILive.SelectionSet {
@@ -162,7 +168,7 @@ public class GetPokemonQuery: GraphQLQuery {
           /// An object relationship
           public var type: Type_SelectionSet? { __data["type"] }
 
-          /// Pokemon.Pokemon_datum.Type_SelectionSet.Type_SelectionSet
+          /// Pokemon.PokemonDatum.Type_SelectionSet.Type_SelectionSet
           ///
           /// Parent Type: `Pokemon_v2_type`
           public struct Type_SelectionSet: PokedexAPILive.SelectionSet {
@@ -178,7 +184,7 @@ public class GetPokemonQuery: GraphQLQuery {
             /// An array relationship
             public var name: [Name] { __data["name"] }
 
-            /// Pokemon.Pokemon_datum.Type_SelectionSet.Type_SelectionSet.Name
+            /// Pokemon.PokemonDatum.Type_SelectionSet.Type_SelectionSet.Name
             ///
             /// Parent Type: `Pokemon_v2_typename`
             public struct Name: PokedexAPILive.SelectionSet {
@@ -196,7 +202,7 @@ public class GetPokemonQuery: GraphQLQuery {
           }
         }
 
-        /// Pokemon.Pokemon_datum.Ability
+        /// Pokemon.PokemonDatum.Ability
         ///
         /// Parent Type: `Pokemon_v2_pokemonability`
         public struct Ability: PokedexAPILive.SelectionSet {
@@ -216,7 +222,7 @@ public class GetPokemonQuery: GraphQLQuery {
           public var name: Name? { __data["name"] }
           public var is_hidden: Bool { __data["is_hidden"] }
 
-          /// Pokemon.Pokemon_datum.Ability.Name
+          /// Pokemon.PokemonDatum.Ability.Name
           ///
           /// Parent Type: `Pokemon_v2_ability`
           public struct Name: PokedexAPILive.SelectionSet {
@@ -227,15 +233,32 @@ public class GetPokemonQuery: GraphQLQuery {
             public static var __selections: [ApolloAPI.Selection] { [
               .field("__typename", String.self),
               .field("id", Int.self),
-              .field("name", String.self),
+              .field("pokemon_v2_abilitynames", alias: "name", [Name].self, arguments: ["where": ["pokemon_v2_language": ["iso639": ["_eq": "en"]]]]),
             ] }
 
             public var id: Int { __data["id"] }
-            public var name: String { __data["name"] }
+            /// An array relationship
+            public var name: [Name] { __data["name"] }
+
+            /// Pokemon.PokemonDatum.Ability.Name.Name
+            ///
+            /// Parent Type: `Pokemon_v2_abilityname`
+            public struct Name: PokedexAPILive.SelectionSet {
+              public let __data: DataDict
+              public init(_dataDict: DataDict) { __data = _dataDict }
+
+              public static var __parentType: ApolloAPI.ParentType { PokedexAPILive.Objects.Pokemon_v2_abilityname }
+              public static var __selections: [ApolloAPI.Selection] { [
+                .field("__typename", String.self),
+                .field("name", String.self),
+              ] }
+
+              public var name: String { __data["name"] }
+            }
           }
         }
 
-        /// Pokemon.Pokemon_datum.Move
+        /// Pokemon.PokemonDatum.Move
         ///
         /// Parent Type: `Pokemon_v2_pokemonmove`
         public struct Move: PokedexAPILive.SelectionSet {
@@ -256,7 +279,7 @@ public class GetPokemonQuery: GraphQLQuery {
           /// An object relationship
           public var move: Move? { __data["move"] }
 
-          /// Pokemon.Pokemon_datum.Move.Version_group
+          /// Pokemon.PokemonDatum.Move.Version_group
           ///
           /// Parent Type: `Pokemon_v2_versiongroup`
           public struct Version_group: PokedexAPILive.SelectionSet {
@@ -274,7 +297,7 @@ public class GetPokemonQuery: GraphQLQuery {
             public var name: String { __data["name"] }
           }
 
-          /// Pokemon.Pokemon_datum.Move.Move
+          /// Pokemon.PokemonDatum.Move.Move
           ///
           /// Parent Type: `Pokemon_v2_move`
           public struct Move: PokedexAPILive.SelectionSet {
@@ -293,7 +316,7 @@ public class GetPokemonQuery: GraphQLQuery {
             /// An object relationship
             public var type: Type_SelectionSet? { __data["type"] }
 
-            /// Pokemon.Pokemon_datum.Move.Move.Name
+            /// Pokemon.PokemonDatum.Move.Move.Name
             ///
             /// Parent Type: `Pokemon_v2_movename`
             public struct Name: PokedexAPILive.SelectionSet {
@@ -311,7 +334,7 @@ public class GetPokemonQuery: GraphQLQuery {
               public var name: String { __data["name"] }
             }
 
-            /// Pokemon.Pokemon_datum.Move.Move.Type_SelectionSet
+            /// Pokemon.PokemonDatum.Move.Move.Type_SelectionSet
             ///
             /// Parent Type: `Pokemon_v2_type`
             public struct Type_SelectionSet: PokedexAPILive.SelectionSet {
@@ -327,7 +350,7 @@ public class GetPokemonQuery: GraphQLQuery {
               /// An array relationship
               public var pokemon_v2_typenames: [Pokemon_v2_typename] { __data["pokemon_v2_typenames"] }
 
-              /// Pokemon.Pokemon_datum.Move.Move.Type_SelectionSet.Pokemon_v2_typename
+              /// Pokemon.PokemonDatum.Move.Move.Type_SelectionSet.Pokemon_v2_typename
               ///
               /// Parent Type: `Pokemon_v2_typename`
               public struct Pokemon_v2_typename: PokedexAPILive.SelectionSet {
