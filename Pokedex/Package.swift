@@ -57,6 +57,10 @@ let package = Package(
         "PokedexAPI"
       ]
     ),
+    .testTarget(
+      name: "ViewPokemonTests",
+      dependencies: ["ViewPokemon"]
+    ),
     .target(
       name: "PokedexAPI",
       dependencies: [

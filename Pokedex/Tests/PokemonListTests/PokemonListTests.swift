@@ -60,11 +60,7 @@ final class PokemonListTests: XCTestCase {
     }
 
     await store.send(.view(.didTapPokemon(1))) {
-      $0.presentedPokemon = PokemonListEntry(id: 1, name: "Bulbasaur")
-    }
-
-    await store.send(.view(.dismissPresentedPokemon)) {
-      $0.presentedPokemon = nil
+      $0.presentedPokemon = .loading(Pokemon(id: 1, name: "Bulbasaur", thumbnailURL: nil))
     }
   }
 }
