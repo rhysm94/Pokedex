@@ -20,6 +20,8 @@ public struct FullPokemon: Hashable {
 
   public let moves: [Move]
 
+  public let imageURL: URL?
+
   public struct EvolutionChain: Hashable {
     public let id: Int
     public let species: [Pokemon]
@@ -38,7 +40,8 @@ public struct FullPokemon: Hashable {
     typeOne: PokemonType,
     typeTwo: PokemonType?,
     abilities: [Ability],
-    moves: [Move]
+    moves: [Move],
+    imageURL: URL?
   ) {
     self.id = id
     self.name = name
@@ -48,5 +51,6 @@ public struct FullPokemon: Hashable {
     self.typeTwo = typeTwo
     self.abilities = abilities
     self.moves = moves
+    self.imageURL = imageURL
   }
 }
