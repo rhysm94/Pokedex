@@ -25,7 +25,8 @@ final class ViewPokemonTests: XCTestCase {
 
     await store.send(.view(.initialise))
 
-    await store.receive(\.receiveFullPokemon) {
+
+    await store.receive(\.receiveFullPokemon.success, .bulbasaur) {
       $0 = .loaded(.bulbasaur)
     }
   }
