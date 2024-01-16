@@ -60,6 +60,6 @@ private struct PokemonIconView: View {
         circleImage
       }
     }
-    .frame(width: 24, height: 24)
+    .frame(width: 36, height: 36)
   }
 }

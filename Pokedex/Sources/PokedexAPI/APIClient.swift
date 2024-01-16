@@ -11,6 +11,9 @@ import DependenciesMacros
 @DependencyClient
 public struct APIClient {
   public var getAllPokemon: () async throws -> [Pokemon]
+  public var getPokemon: (_ pokemonID: Int) async throws -> FullPokemon
+
+  public var getAllAbilities: () async throws -> [Ability]
 }
 
 extension APIClient: TestDependencyKey {

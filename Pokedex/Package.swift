@@ -13,18 +13,21 @@ let package = Package(
   products: [
     .library(name: "Pokedex", targets: ["Pokedex"]),
     .library(name: "PokemonList", targets: ["PokemonList"]),
-    .library(name: "PokedexAPI", targets: ["PokedexAPI"])
+    .library(name: "PokedexAPI", targets: ["PokedexAPI"]),
+    .library(name: "PokedexAPILive", targets: ["PokedexAPILive"]),
   ],
   dependencies: [
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.6.0"),
-    .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.1.0")
+    .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.1.0"),
+    .package(url: "https://github.com/apollographql/apollo-ios", from: "1.0.0"),
   ],
   targets: [
     .target(
       name: "Pokedex",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-        "PokemonList"
+        "PokemonList",
+        "PokedexAPILive"
       ]
     ),
     .testTarget(
@@ -49,6 +52,13 @@ let package = Package(
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
+      ]
+    ),
+    .target(
+      name: "PokedexAPILive",
+      dependencies: [
+        "PokedexAPI",
+        .product(name: "Apollo", package: "apollo-ios")
       ]
     )
   ]
