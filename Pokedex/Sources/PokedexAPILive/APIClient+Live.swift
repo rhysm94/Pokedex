@@ -50,8 +50,8 @@ extension APIClient: DependencyKey {
         let types = try extractTypes(from: pokemonData.types)
 
         let abilities = try pokemonData.abilities.compactMap { ability in
-          guard let name = ability.name?.name else { throw ApolloError.missingData }
-          return Ability(id: ability.id, name: name)
+          guard let name = ability.name?.name.first?.name else { throw ApolloError.missingData }
+          return Ability(id: ability.id, name: name, isHidden: ability.is_hidden)
         }
 
         let moves = try pokemonData.moves.compactMap { move in
@@ -87,7 +87,7 @@ extension APIClient: DependencyKey {
             return nil
           }
 
-          return Ability(id: ability.id, name: name)
+          return Ability(id: ability.id, name: name, isHidden: false)
         }
       }
     )
