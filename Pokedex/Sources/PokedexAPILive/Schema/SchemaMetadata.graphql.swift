@@ -23,6 +23,8 @@ public enum SchemaMetadata: ApolloAPI.SchemaMetadata {
   public static func objectType(forTypename typename: String) -> ApolloAPI.Object? {
     switch typename {
     case "query_root": return PokedexAPILive.Objects.Query_root
+    case "pokemon_v2_ability": return PokedexAPILive.Objects.Pokemon_v2_ability
+    case "pokemon_v2_abilityname": return PokedexAPILive.Objects.Pokemon_v2_abilityname
     case "pokemon_v2_pokemonspecies": return PokedexAPILive.Objects.Pokemon_v2_pokemonspecies
     case "pokemon_v2_pokemonspeciesname": return PokedexAPILive.Objects.Pokemon_v2_pokemonspeciesname
     default: return nil

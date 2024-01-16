@@ -16,7 +16,10 @@ extension APIClient: DependencyKey {
 
     return Self(
       getAllPokemon: {
-        let getAllPokemon = try await apolloClient.fetch(query: GetAllPokemonQuery())
+        let getAllPokemon = try await apolloClient.fetch(
+          query: GetAllPokemonQuery(),
+          cachePolicy: .returnCacheDataElseFetch
+        )
 
         return getAllPokemon.pokemonSpecies.compactMap { species -> Pokemon? in
           guard let name = species.pokemon_v2_pokemonspeciesnames.first?.name else {
@@ -27,33 +30,22 @@ extension APIClient: DependencyKey {
 
           return Pokemon(id: species.id, name: name, thumbnailURL: spriteURL)
         }
-      }
-    )
-  }
-}
+      },
+      getAllAbilities: {
+        let getAllAbilities = try await apolloClient.fetch(
+          query: GetAllAbilitiesQuery(),
+          cachePolicy: .returnCacheDataElseFetch
+        )
 
-import ApolloAPI
-
-extension ApolloClient {
-  func fetch<Query: GraphQLQuery>(
-    query: Query
-  ) async throws -> Query.Data {
-    try await withCheckedThrowingContinuation { continuation in
-      fetch(query: query) { result in
-        switch result {
-        case let .success(data):
-          guard let data = data.data else {
-            continuation.resume(throwing: data.errors?.first ?? ApolloError.unexpectedError)
-            return
+        return getAllAbilities.pokemon_v2_ability.compactMap { ability in
+          guard let name = ability.pokemon_v2_abilitynames.first?.name else {
+            return nil
           }
 
-          continuation.resume(returning: data)
-        case let .failure(error):
-          continuation.resume(throwing: error)
-          return
+          return Ability(id: ability.id, name: name)
         }
       }
-    }
+    )
   }
 }
 
