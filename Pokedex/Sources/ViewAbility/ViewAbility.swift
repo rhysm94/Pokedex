@@ -7,6 +7,7 @@
 
 import ComposableArchitecture
 import PokedexAPI
+import ViewPokemon
 
 @Reducer
 public struct ViewAbility {
@@ -14,14 +15,16 @@ public struct ViewAbility {
     public var abilityID: Int
     public var name: String
     public var flavourText: String?
-    public var pokemonWithAbility: [Pokemon] = []
+    public var pokemonWithAbility: IdentifiedArrayOf<Pokemon>
     public var isLoading: Bool
+
+    @PresentationState public var selectedPokemon: ViewPokemon.State?
 
     public init(
       abilityID: Int,
       name: String,
       flavourText: String? = nil,
-      pokemonWithAbility: [Pokemon] = [],
+      pokemonWithAbility: IdentifiedArrayOf<Pokemon> = [],
       isLoading: Bool
     ) {
       self.abilityID = abilityID
@@ -36,8 +39,11 @@ public struct ViewAbility {
     case didReceiveFullAbility(Result<FullAbility, Error>)
     case view(ViewAction)
 
+    case viewPokemon(PresentationAction<ViewPokemon.Action>)
+
     public enum ViewAction {
       case initialise
+      case didTapPokemon(Int)
     }
   }
 
@@ -58,15 +64,30 @@ public struct ViewAbility {
           )
         }
 
+      case let .view(.didTapPokemon(pokemonID)):
+        guard let pokemon = state.pokemonWithAbility[id: pokemonID] else {
+          return .none
+        }
+
+        state.selectedPokemon = .init(loadingState: .loading(pokemon))
+        return .none
+
       case let .didReceiveFullAbility(.success(fullAbility)):
         state.isLoading = false
         state.flavourText = fullAbility.flavourText
-        state.pokemonWithAbility = fullAbility.pokemonWithAbility
+        state.pokemonWithAbility = IdentifiedArray(uniqueElements: fullAbility.pokemonWithAbility)
         return .none
 
       case .didReceiveFullAbility(.failure):
+        // TODO: Fill in error state
+        return .none
+
+      case .viewPokemon:
         return .none
       }
+    }
+    .ifLet(\.$selectedPokemon, action: \.viewPokemon) {
+      ViewPokemon()
     }
   }
 }

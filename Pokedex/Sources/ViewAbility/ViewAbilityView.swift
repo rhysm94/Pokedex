@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import PokedexAPI
 import SwiftUI
+import ViewPokemon
 
 public struct ViewAbilityView: View {
   let store: StoreOf<ViewAbility>
@@ -28,7 +29,10 @@ public struct ViewAbilityView: View {
         if !viewStore.pokemonWithAbility.isEmpty {
           Section("Pokémon with \(viewStore.name)") {
             ForEach(viewStore.pokemonWithAbility) { pokemon in
-              Text(pokemon.name)
+              Button(pokemon.name) {
+                viewStore.send(.didTapPokemon(pokemon.id))
+              }
+              .buttonStyle(.plain)
             }
           }
         }
@@ -47,6 +51,10 @@ public struct ViewAbilityView: View {
       .task {
         await viewStore.send(.initialise).finish()
       }
+      .navigationDestination(
+        store: store.scope(state: \.$selectedPokemon, action: \.viewPokemon),
+        destination: ViewPokemonView.init
+      )
       .navigationTitle(viewStore.name)
     }
   }

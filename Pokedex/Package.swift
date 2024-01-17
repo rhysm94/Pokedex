@@ -90,7 +90,8 @@ let package = Package(
       name: "ViewAbility",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-        "PokedexAPI"
+        "PokedexAPI",
+        "ViewPokemon"
       ]
     )
   ]
