@@ -109,7 +109,7 @@ extension APIClient: DependencyKey {
         return try FullAbility(
           id: abilityID,
           name: name,
-          flavourText: flavorText.text,
+          flavourText: flavorText.text.replacingOccurrences(of: "\n'", with: " "),
           pokemonWithAbility: ability.pokemon.compactMap { pokemon in
             guard
               let id = pokemon.id,
