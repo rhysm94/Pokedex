@@ -46,8 +46,12 @@ public struct AbilityListView: View {
         .task {
           await viewStore.send(.initialise).finish()
         }
+        .refreshable {
+          viewStore.send(.initialise)
+        }
       }
       .navigationTitle("Abilities")
+      .alert(store: store.scope(state: \.$alert, action: \.alert))
     }
   }
 }

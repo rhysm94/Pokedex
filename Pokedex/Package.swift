@@ -84,6 +84,13 @@ let package = Package(
         "ViewAbility"
       ]
     ),
+    .testTarget(
+      name: "AbilityListTests",
+      dependencies: [
+        "AbilityList",
+        "PokedexAPI"
+      ]
+    ),
     .target(
       name: "ViewAbility",
       dependencies: [
