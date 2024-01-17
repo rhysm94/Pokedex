@@ -12,7 +12,7 @@ import ViewPokemon
 @Reducer
 public struct ViewAbility {
   public struct State: Equatable {
-    public var abilityID: Int
+    public var abilityID: Ability.ID
     public var name: String
     public var flavourText: String?
     public var pokemonWithAbility: IdentifiedArrayOf<Pokemon>
@@ -21,7 +21,7 @@ public struct ViewAbility {
     @PresentationState public var selectedPokemon: ViewPokemon.State?
 
     public init(
-      abilityID: Int,
+      abilityID: Ability.ID,
       name: String,
       flavourText: String? = nil,
       pokemonWithAbility: IdentifiedArrayOf<Pokemon> = [],
@@ -43,7 +43,7 @@ public struct ViewAbility {
 
     public enum ViewAction {
       case initialise
-      case didTapPokemon(Int)
+      case didTapPokemon(Pokemon.ID)
     }
   }
 

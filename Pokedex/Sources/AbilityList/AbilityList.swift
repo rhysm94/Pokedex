@@ -35,7 +35,7 @@ public struct AbilityList {
 
     public enum ViewAction {
       case initialise
-      case didSelectAbility(abilityID: Int)
+      case didSelectAbility(Ability.ID)
     }
   }
 

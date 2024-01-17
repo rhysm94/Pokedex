@@ -6,9 +6,12 @@
 //
 
 import Foundation
+import Tagged
 
 public struct FullPokemon: Hashable {
-  public let id: Int
+  public typealias ID = Tagged<Self, Int>
+
+  public let id: ID
   public let name: String
   public let evolvesFrom: Int?
   public let evolutionChain: EvolutionChain
@@ -43,7 +46,7 @@ public struct FullPokemon: Hashable {
     moves: [Move],
     imageURL: URL?
   ) {
-    self.id = id
+    self.id = .init(id)
     self.name = name
     self.evolvesFrom = evolvesFrom
     self.evolutionChain = evolutionChain

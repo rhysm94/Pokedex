@@ -31,7 +31,7 @@ extension APIClient: DependencyKey {
       },
       getPokemon: { pokemonID in
         let getPokemon = try await apolloClient.fetch(
-          query: GetPokemonQuery(pokemonID: pokemonID),
+          query: GetPokemonQuery(pokemonID: pokemonID.rawValue),
           cachePolicy: .returnCacheDataElseFetch
         )
 
@@ -65,7 +65,7 @@ extension APIClient: DependencyKey {
         }
 
         return try FullPokemon(
-          id: pokemonID,
+          id: pokemonID.rawValue,
           name: name,
           evolvesFrom: getPokemon.pokemon?.evolves_from_species_id,
           evolutionChain: FullPokemon.EvolutionChain(data: getPokemon),
@@ -92,7 +92,7 @@ extension APIClient: DependencyKey {
       },
       getAbility: { abilityID in
         let getAbility = try await apolloClient.fetch(
-          query: GetAbilityQuery(id: abilityID),
+          query: GetAbilityQuery(id: abilityID.rawValue),
           cachePolicy: .returnCacheDataElseFetch
         )
 
@@ -107,7 +107,7 @@ extension APIClient: DependencyKey {
         }
 
         return try FullAbility(
-          id: abilityID,
+          id: abilityID.rawValue,
           name: name,
           flavourText: flavorText.text.replacingOccurrences(of: "\n'", with: " "),
           pokemonWithAbility: ability.pokemon.compactMap { pokemon in

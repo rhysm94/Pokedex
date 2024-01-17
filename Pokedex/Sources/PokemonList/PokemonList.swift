@@ -79,6 +79,6 @@ public struct PokemonList {
 
 private extension PokemonListEntry {
   init(pokemon: Pokemon) {
-    self.init(id: pokemon.id, name: pokemon.name, imageURL: pokemon.thumbnailURL)
+    self.init(id: pokemon.id.rawValue, name: pokemon.name, imageURL: pokemon.thumbnailURL)
   }
 }
