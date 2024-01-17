@@ -80,7 +80,7 @@ public struct ViewAbility {
           return .none
         }
 
-        state.selectedPokemon = .init(loadingState: .loading(pokemon))
+        state.selectedPokemon = .init(pokemon: pokemon)
         return .none
 
       case let .didReceiveFullAbility(.success(fullAbility)):
