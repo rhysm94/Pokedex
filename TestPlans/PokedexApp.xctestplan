@@ -20,6 +20,13 @@
     {
       "target" : {
         "containerPath" : "container:Pokedex",
+        "identifier" : "AbilityListTests",
+        "name" : "AbilityListTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Pokedex",
         "identifier" : "PokemonListTests",
         "name" : "PokemonListTests"
       }

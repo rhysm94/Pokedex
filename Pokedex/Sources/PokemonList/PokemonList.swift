@@ -14,13 +14,33 @@ public struct PokemonList {
   public struct State: Equatable {
     public var pokemon: IdentifiedArrayOf<PokemonListEntry>
     @PresentationState public var presentedPokemon: ViewPokemon.State?
+    @PresentationState public var alert: AlertState<Action.Alert>?
+    public var isLoading: Bool
 
     public init(
       pokemon: IdentifiedArrayOf<PokemonListEntry>,
-      presentedPokemon: ViewPokemon.State? = nil
+      presentedPokemon: ViewPokemon.State? = nil,
+      alert: AlertState<Action.Alert>? = nil,
+      isLoading: Bool = false
     ) {
       self.pokemon = pokemon
       self.presentedPokemon = presentedPokemon
+      self.alert = alert
+      self.isLoading = isLoading
+    }
+
+    mutating func initialise() -> Effect<Action> {
+      @Dependency(\.apiClient) var apiClient
+
+      isLoading = true
+
+      return .run { send in
+        await send(
+          .didReceivePokemon(
+            Result { try await apiClient.getAllPokemon() }
+          )
+        )
+      }
     }
   }
 
@@ -28,33 +48,33 @@ public struct PokemonList {
     case view(ViewAction)
     case didReceivePokemon(Result<[Pokemon], Error>)
     case viewPokemon(PresentationAction<ViewPokemon.Action>)
+    case alert(PresentationAction<Alert>)
 
     public enum ViewAction {
       case initialise
       case didTapPokemon(PokemonListEntry.ID)
     }
+
+    public enum Alert {
+      case retry
+    }
   }
 
   public init() {}
-
-  @Dependency(\.apiClient) var apiClient
 
   public var body: some ReducerOf<Self> {
     Reduce { state, action in
       switch action {
       case .view(.initialise):
-        return .run { send in
-          await send(
-            .didReceivePokemon(
-              Result { try await apiClient.getAllPokemon() }
-            )
-          )
-        }
+        return state.initialise()
 
-      case .didReceivePokemon(.failure):
+      case let .didReceivePokemon(.failure(error)):
+        state.isLoading = false
+        state.alert = .error(error)
         return .none
 
       case let .didReceivePokemon(.success(pokemon)):
+        state.isLoading = false
         state.pokemon = IdentifiedArray(uniqueElements: pokemon.map(PokemonListEntry.init))
         return .none
 
@@ -67,10 +87,14 @@ public struct PokemonList {
         )
         return .none
 
-      case .viewPokemon:
+      case .alert(.presented(.retry)):
+        return state.initialise()
+
+      case .viewPokemon, .alert:
         return .none
       }
     }
+    .ifLet(\.$alert, action: \.alert)
     .ifLet(\.$presentedPokemon, action: \.viewPokemon) {
       ViewPokemon()
     }
