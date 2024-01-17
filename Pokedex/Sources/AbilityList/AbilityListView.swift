@@ -8,17 +8,47 @@
 import ComposableArchitecture
 import PokedexAPI
 import SwiftUI
+import ViewAbility
 
 public struct AbilityListView: View {
-  public let store: StoreOf<AbilityList>
+  let store: StoreOf<AbilityList>
+
+  public init(store: StoreOf<AbilityList>) {
+    self.store = store
+  }
 
   public var body: some View {
-    WithViewStore(store, observe: { $0 }, send: { .view($0) }) { viewStore in
-      List(viewStore.abilities) { ability in
-        Text(ability.name)
+    NavigationStack {
+      WithViewStore(store, observe: { $0 }, send: { .view($0) }) { viewStore in
+        List {
+          ForEach(viewStore.abilities) { ability in
+            Button(ability.name) {
+              viewStore.send(.didSelectAbility(abilityID: ability.id))
+            }
+            .buttonStyle(.plain)
+          }
+
+          if viewStore.isLoading {
+            HStack {
+              Spacer()
+
+              ProgressView()
+                .progressViewStyle(.circular)
+
+              Spacer()
+            }
+          }
+        }
+        .navigationDestination(
+          store: store.scope(state: \.$viewAbility, action: \.viewAbility),
+          destination: ViewAbilityView.init
+        )
+        .task {
+          await viewStore.send(.initialise).finish()
+        }
       }
+      .navigationTitle("Abilities")
     }
-    .navigationTitle("Abilities")
   }
 }
 

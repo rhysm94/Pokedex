@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import AbilityList
 import PokemonList
 
 @Reducer
@@ -14,29 +15,29 @@ public struct Pokedex {
     @BindingState public var currentTab: Tab
 
     public var pokemonList: PokemonList.State
+    public var abilityList: AbilityList.State
 
     public init(
       currentTab: Tab = .pokemon,
-      pokemonList: PokemonList.State = .init(pokemon: [])
+      pokemonList: PokemonList.State = .init(pokemon: []),
+      abilityList: AbilityList.State = .init(abilities: [])
     ) {
       self.currentTab = currentTab
       self.pokemonList = pokemonList
+      self.abilityList = abilityList
     }
 
     public enum Tab {
       case pokemon
+      case abilities
     }
   }
 
   public enum Action: BindableAction {
-    case view(ViewAction)
     case binding(BindingAction<State>)
 
     case pokemonList(PokemonList.Action)
-
-    public enum ViewAction {
-      case initialise
-    }
+    case abilityList(AbilityList.Action)
   }
 
   public init() {}
@@ -48,17 +49,8 @@ public struct Pokedex {
       PokemonList()
     }
 
-    Reduce { state, action in
-      switch action {
-      case .view(.initialise):
-        return .none
-
-      case .pokemonList:
-        return .none
-
-      case .binding:
-        return .none
-      }
+    Scope(state: \.abilityList, action: \.abilityList) {
+      AbilityList()
     }
   }
 }
