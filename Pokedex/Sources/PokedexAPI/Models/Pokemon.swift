@@ -6,14 +6,16 @@
 //
 
 import Foundation
+import Tagged
 
 public struct Pokemon: Hashable, Identifiable {
-  public let id: Int
+  public typealias ID = Tagged<Self, Int>
+  public let id: ID
   public let name: String
   public let thumbnailURL: URL?
 
   public init(id: Int, name: String, thumbnailURL: URL?) {
-    self.id = id
+    self.id = .init(id)
     self.name = name
     self.thumbnailURL = thumbnailURL
   }

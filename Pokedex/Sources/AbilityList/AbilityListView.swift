@@ -23,7 +23,7 @@ public struct AbilityListView: View {
         List {
           ForEach(viewStore.abilities) { ability in
             Button(ability.name) {
-              viewStore.send(.didSelectAbility(abilityID: ability.id))
+              viewStore.send(.didSelectAbility(ability.id))
             }
             .buttonStyle(.plain)
           }

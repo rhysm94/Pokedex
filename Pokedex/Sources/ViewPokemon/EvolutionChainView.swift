@@ -10,7 +10,7 @@ import PokedexAPI
 
 public struct EvolutionChainView: View {
   let chain: FullPokemon.EvolutionChain
-  let didTapPokemonID: (_ pokemonID: Int) -> Void
+  let didTapPokemonID: (_ pokemonID: Pokemon.ID) -> Void
 
   public var body: some View {
     LazyVGrid(columns: [.init(.adaptive(minimum: 80, maximum: 150))]) {

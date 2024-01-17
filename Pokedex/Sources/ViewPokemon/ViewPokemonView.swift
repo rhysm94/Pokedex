@@ -87,11 +87,11 @@ struct ViewState: Equatable {
   init(state: ViewPokemon.State) {
     switch state.loadingState {
     case .loading(let pokemon):
-      self.pokedexNumber = Self.pokedexNumber(pokemon.id)
+      self.pokedexNumber = Self.pokedexNumber(pokemon.id.rawValue)
       self.name = pokemon.name
       self.imageURL = pokemon.thumbnailURL
     case .loaded(let fullPokemon):
-      self.pokedexNumber = Self.pokedexNumber(fullPokemon.id)
+      self.pokedexNumber = Self.pokedexNumber(fullPokemon.id.rawValue)
       self.name = fullPokemon.name
       self.imageURL = fullPokemon.imageURL
 

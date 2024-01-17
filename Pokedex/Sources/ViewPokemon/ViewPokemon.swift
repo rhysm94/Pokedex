@@ -17,9 +17,9 @@ public struct ViewPokemon {
     var pokemonID: Int {
       switch loadingState {
       case .loading(let pokemon):
-        pokemon.id
+        pokemon.id.rawValue
       case .loaded(let fullPokemon):
-        fullPokemon.id
+        fullPokemon.id.rawValue
       }
     }
 
@@ -44,7 +44,7 @@ public struct ViewPokemon {
 
     public enum ViewAction {
       case initialise
-      case didTapPokemon(Int)
+      case didTapPokemon(Pokemon.ID)
     }
   }
 
@@ -67,7 +67,7 @@ public struct ViewPokemon {
 
       case let .view(.didTapPokemon(tappedID)):
         guard
-          state.pokemonID != tappedID,
+          state.pokemonID != tappedID.rawValue,
           case let .loaded(pokemon) = state.loadingState,
           let tappedPokemon = pokemon.evolutionChain.species.first(where: { $0.id == tappedID })
         else {

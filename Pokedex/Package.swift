@@ -22,6 +22,7 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.6.0"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.1.0"),
+    .package(url: "https://github.com/pointfreeco/swift-tagged", from: "0.10.0"),
     .package(url: "https://github.com/apollographql/apollo-ios", from: "1.0.0"),
   ],
   targets: [
@@ -65,6 +66,7 @@ let package = Package(
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "DependenciesMacros", package: "swift-dependencies"),
+        .product(name: "Tagged", package: "swift-tagged")
       ]
     ),
     .target(

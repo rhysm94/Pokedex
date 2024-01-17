@@ -11,10 +11,10 @@ import DependenciesMacros
 @DependencyClient
 public struct APIClient {
   public var getAllPokemon: () async throws -> [Pokemon]
-  public var getPokemon: (_ pokemonID: Int) async throws -> FullPokemon
+  public var getPokemon: (_ pokemonID: Pokemon.ID) async throws -> FullPokemon
 
   public var getAllAbilities: () async throws -> [Ability]
-  public var getAbility: (_ abilityID: Int) async throws -> FullAbility
+  public var getAbility: (_ abilityID: Ability.ID) async throws -> FullAbility
 }
 
 extension APIClient: TestDependencyKey {
