@@ -15,6 +15,7 @@ let package = Package(
     .library(name: "PokemonList", targets: ["PokemonList"]),
     .library(name: "ViewPokemon", targets: ["ViewPokemon"]),
     .library(name: "AbilityList", targets: ["AbilityList"]),
+    .library(name: "ViewAbility", targets: ["ViewAbility"]),
     .library(name: "PokedexAPI", targets: ["PokedexAPI"]),
     .library(name: "PokedexAPILive", targets: ["PokedexAPILive"]),
   ],
@@ -78,6 +79,14 @@ let package = Package(
     ),
     .target(
       name: "AbilityList",
+      dependencies: [
+        .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        "PokedexAPI",
+        "ViewAbility"
+      ]
+    ),
+    .target(
+      name: "ViewAbility",
       dependencies: [
         .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         "PokedexAPI"

@@ -89,6 +89,39 @@ extension APIClient: DependencyKey {
 
           return Ability(id: ability.id, name: name, isHidden: false)
         }
+      },
+      getAbility: { abilityID in
+        let getAbility = try await apolloClient.fetch(
+          query: GetAbilityQuery(id: abilityID),
+          cachePolicy: .returnCacheDataElseFetch
+        )
+
+        guard
+          let ability = getAbility.pokemon_v2_ability_by_pk,
+          let name = ability.names.first?.name,
+          let flavorText = ability.flavorText.sorted(
+            by: { ($0.versionGroupID ?? 0) > ($1.versionGroupID ?? 0) }
+          ).first
+        else {
+          throw ApolloError.missingData
+        }
+
+        return try FullAbility(
+          id: abilityID,
+          name: name,
+          flavourText: flavorText.text,
+          pokemonWithAbility: ability.pokemon.compactMap { pokemon in
+            guard
+              let id = pokemon.id,
+              let pokemonData = pokemon.pokemonData,
+              let name = pokemonData.data?.names.first?.name
+            else {
+              throw ApolloError.missingData
+            }
+
+            return Pokemon(id: id, name: name, thumbnailURL: spriteURL(for: pokemonData.spriteName))
+          }
+        )
       }
     )
   }
