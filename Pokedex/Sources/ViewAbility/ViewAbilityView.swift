@@ -55,6 +55,7 @@ public struct ViewAbilityView: View {
         store: store.scope(state: \.$selectedPokemon, action: \.viewPokemon),
         destination: ViewPokemonView.init
       )
+      .alert(store: store.scope(state: \.$alert, action: \.alert))
       .navigationTitle(viewStore.name)
     }
   }
