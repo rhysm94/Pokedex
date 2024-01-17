@@ -16,6 +16,9 @@
 /* Begin PBXFileReference section */
 		9141322F2B51B40600817283 /* Pokedex */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Pokedex; sourceTree = "<group>"; };
 		91947AB82B51B27700CB78CA /* Pokedex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Pokedex.entitlements; sourceTree = "<group>"; };
+		91C8B56F2B57598F00B44D67 /* ViewPokemon.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ViewPokemon.xctestplan; sourceTree = "<group>"; };
+		91C8B5702B57598F00B44D67 /* PokemonList.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PokemonList.xctestplan; sourceTree = "<group>"; };
+		91C8B5712B5759D500B44D67 /* PokedexApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PokedexApp.xctestplan; sourceTree = "<group>"; };
 		91D71A552B51B1B3001A65EC /* Pokedex App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pokedex App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		91D71A582B51B1B3001A65EC /* PokedexApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexApp.swift; sourceTree = "<group>"; };
 		91D71A5C2B51B1B5001A65EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -41,9 +44,20 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		91C8B56E2B57598F00B44D67 /* TestPlans */ = {
+			isa = PBXGroup;
+			children = (
+				91C8B5712B5759D500B44D67 /* PokedexApp.xctestplan */,
+				91C8B56F2B57598F00B44D67 /* ViewPokemon.xctestplan */,
+				91C8B5702B57598F00B44D67 /* PokemonList.xctestplan */,
+			);
+			path = TestPlans;
+			sourceTree = "<group>";
+		};
 		91D71A4C2B51B1B3001A65EC = {
 			isa = PBXGroup;
 			children = (
+				91C8B56E2B57598F00B44D67 /* TestPlans */,
 				9141322F2B51B40600817283 /* Pokedex */,
 				91D71A572B51B1B3001A65EC /* PokedexApp */,
 				91D71A562B51B1B3001A65EC /* Products */,
