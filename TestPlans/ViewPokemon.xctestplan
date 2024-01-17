@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "E8DBFA2C-877A-41E5-88A2-235F086D1278",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ViewPokemonTests",
+        "name" : "ViewPokemonTests"
+      }
+    }
+  ],
+  "version" : 1
+}

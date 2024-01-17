@@ -1,0 +1,36 @@
+{
+  "configurations" : [
+    {
+      "id" : "D044F593-1BA5-4A4A-9E56-084F6146554B",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Pokedex.xcodeproj",
+      "identifier" : "91D71A542B51B1B3001A65EC",
+      "name" : "Pokedex App"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Pokedex",
+        "identifier" : "PokemonListTests",
+        "name" : "PokemonListTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Pokedex",
+        "identifier" : "ViewPokemonTests",
+        "name" : "ViewPokemonTests"
+      }
+    }
+  ],
+  "version" : 1
+}

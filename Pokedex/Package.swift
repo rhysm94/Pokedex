@@ -34,10 +34,6 @@ let package = Package(
         "PokedexAPILive"
       ]
     ),
-    .testTarget(
-      name: "PokedexTests",
-      dependencies: ["Pokedex"]
-    ),
     .target(
       name: "PokemonList",
       dependencies: [

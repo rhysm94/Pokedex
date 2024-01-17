@@ -60,7 +60,9 @@ final class PokemonListTests: XCTestCase {
     }
 
     await store.send(.view(.didTapPokemon(1))) {
-      $0.presentedPokemon = .loading(Pokemon(id: 1, name: "Bulbasaur", thumbnailURL: nil))
+      $0.presentedPokemon = .init(
+        loadingState: .loading(Pokemon(id: 1, name: "Bulbasaur", thumbnailURL: nil))
+      )
     }
   }
 }
