@@ -11,40 +11,52 @@ import PokedexAPI
 @Reducer
 public struct ViewPokemon {
   public struct State: Hashable {
-    public var loadingState: LoadingState
+    public var pokemon: Pokemon
+    public var fullPokemon: FullPokemon?
     @PresentationState public var nested: ViewPokemon.State?
-
-    var pokemonID: Int {
-      switch loadingState {
-      case .loading(let pokemon):
-        pokemon.id.rawValue
-      case .loaded(let fullPokemon):
-        fullPokemon.id.rawValue
-      }
-    }
+    @PresentationState public var alert: AlertState<Action.Alert>?
+    public var isLoading: Bool
 
     public init(
-      loadingState: LoadingState,
-      nested: ViewPokemon.State? = nil
+      pokemon: Pokemon,
+      fullPokemon: FullPokemon? = nil,
+      nested: ViewPokemon.State? = nil,
+      alert: AlertState<Action.Alert>? = nil,
+      isLoading: Bool = false
     ) {
-      self.loadingState = loadingState
+      self.pokemon = pokemon
+      self.fullPokemon = fullPokemon
       self.nested = nested
+      self.alert = alert
+      self.isLoading = isLoading
     }
-  }
 
-  public enum LoadingState: Hashable {
-    case loading(Pokemon)
-    case loaded(FullPokemon)
+    mutating func initialise() -> Effect<Action> {
+      @Dependency(\.apiClient) var apiClient
+      isLoading = true
+      return .run { [pokemonID = pokemon.id] send in
+        await send(
+          .receiveFullPokemon(
+            Result { try await apiClient.getPokemon(pokemonID: pokemonID) }
+          )
+        )
+      }
+    }
   }
 
   public enum Action {
     case view(ViewAction)
     case receiveFullPokemon(Result<FullPokemon, Error>)
     indirect case viewPokemon(PresentationAction<Action>)
+    case alert(PresentationAction<Alert>)
 
     public enum ViewAction {
       case initialise
       case didTapPokemon(Pokemon.ID)
+    }
+
+    public enum Alert {
+      case retry
     }
   }
 
@@ -56,36 +68,34 @@ public struct ViewPokemon {
     Reduce { state, action in
       switch action {
       case .view(.initialise):
-        guard case let .loading(pokemon) = state.loadingState else { return .none }
-        return .run { send in
-          await send(
-            .receiveFullPokemon(
-              Result { try await apiClient.getPokemon(pokemonID: pokemon.id) }
-            )
-          )
-        }
+        return state.initialise()
 
       case let .view(.didTapPokemon(tappedID)):
         guard
-          state.pokemonID != tappedID.rawValue,
-          case let .loaded(pokemon) = state.loadingState,
-          let tappedPokemon = pokemon.evolutionChain.species.first(where: { $0.id == tappedID })
+          state.pokemon.id != tappedID,
+          let fullPokemon = state.fullPokemon,
+          let tappedPokemon = fullPokemon.evolutionChain.species.first(where: { $0.id == tappedID })
         else {
           return .none
         }
 
-        state.nested = .init(loadingState: .loading(tappedPokemon))
+        state.nested = .init(pokemon: tappedPokemon)
         return .none
 
       case let .receiveFullPokemon(.success(pokemon)):
-        state.loadingState = .loaded(pokemon)
+        state.isLoading = false
+        state.fullPokemon = pokemon
         return .none
 
       case let .receiveFullPokemon(.failure(error)):
-        print(error.localizedDescription)
+        state.isLoading = false
+        state.alert = .error(error)
         return .none
 
-      case .viewPokemon:
+      case .alert(.presented(.retry)):
+        return state.initialise()
+
+      case .viewPokemon, .alert:
         return .none
       }
     }

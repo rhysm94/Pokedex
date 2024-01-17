@@ -19,6 +19,7 @@
 		91C8B56F2B57598F00B44D67 /* ViewPokemon.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ViewPokemon.xctestplan; sourceTree = "<group>"; };
 		91C8B5702B57598F00B44D67 /* PokemonList.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PokemonList.xctestplan; sourceTree = "<group>"; };
 		91C8B5712B5759D500B44D67 /* PokedexApp.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PokedexApp.xctestplan; sourceTree = "<group>"; };
+		91C8B5722B57BF4400B44D67 /* AbilityList.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = AbilityList.xctestplan; sourceTree = "<group>"; };
 		91D71A552B51B1B3001A65EC /* Pokedex App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Pokedex App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		91D71A582B51B1B3001A65EC /* PokedexApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexApp.swift; sourceTree = "<group>"; };
 		91D71A5C2B51B1B5001A65EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -47,6 +48,7 @@
 		91C8B56E2B57598F00B44D67 /* TestPlans */ = {
 			isa = PBXGroup;
 			children = (
+				91C8B5722B57BF4400B44D67 /* AbilityList.xctestplan */,
 				91C8B5712B5759D500B44D67 /* PokedexApp.xctestplan */,
 				91C8B56F2B57598F00B44D67 /* ViewPokemon.xctestplan */,
 				91C8B5702B57598F00B44D67 /* PokemonList.xctestplan */,

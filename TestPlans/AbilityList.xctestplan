@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "BCA8AF18-B892-4BD4-9CB6-8DD47A143675",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AbilityListTests",
+        "name" : "AbilityListTests"
+      }
+    }
+  ],
+  "version" : 1
+}

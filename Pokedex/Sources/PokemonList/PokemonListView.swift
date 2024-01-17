@@ -19,11 +19,22 @@ public struct PokemonListView: View {
   public var body: some View {
     NavigationStack {
       WithViewStore(store, observe: { $0 }, send: { .view($0) }) { viewStore in
-        List(viewStore.pokemon) { pokemon in
-          Button {
-            viewStore.send(.didTapPokemon(pokemon.id))
-          } label: {
-            PokemonListRow(pokemon: pokemon)
+        List {
+          ForEach(viewStore.pokemon) { pokemon in
+            Button {
+              viewStore.send(.didTapPokemon(pokemon.id))
+            } label: {
+              PokemonListRow(pokemon: pokemon)
+            }
+          }
+
+          if viewStore.isLoading {
+            HStack {
+              Spacer()
+              ProgressView()
+                .progressViewStyle(.circular)
+              Spacer()
+            }
           }
         }
         .task {
@@ -37,6 +48,7 @@ public struct PokemonListView: View {
       .buttonStyle(.plain)
       .navigationTitle("Pokémon")
     }
+    .alert(store: store.scope(state: \.$alert, action: \.alert))
   }
 }
 

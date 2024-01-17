@@ -25,9 +25,12 @@ final class PokemonListTests: XCTestCase {
       }
     }
 
-    await store.send(.view(.initialise))
+    await store.send(.view(.initialise)) {
+      $0.isLoading = true
+    }
 
     await store.receive(\.didReceivePokemon) {
+      $0.isLoading = false
       $0.pokemon = [
         PokemonListEntry(id: 1, name: "Bulbasaur"),
         PokemonListEntry(id: 2, name: "Ivysaur"),
@@ -49,9 +52,12 @@ final class PokemonListTests: XCTestCase {
       }
     }
 
-    await store.send(.view(.initialise))
+    await store.send(.view(.initialise)) {
+      $0.isLoading = true
+    }
 
     await store.receive(\.didReceivePokemon) {
+      $0.isLoading = false
       $0.pokemon = [
         PokemonListEntry(id: 1, name: "Bulbasaur"),
         PokemonListEntry(id: 2, name: "Ivysaur"),
@@ -61,7 +67,7 @@ final class PokemonListTests: XCTestCase {
 
     await store.send(.view(.didTapPokemon(1))) {
       $0.presentedPokemon = .init(
-        loadingState: .loading(Pokemon(id: 1, name: "Bulbasaur", thumbnailURL: nil))
+        pokemon: Pokemon(id: 1, name: "Bulbasaur", thumbnailURL: nil)
       )
     }
   }

@@ -46,11 +46,15 @@ public struct ViewPokemonView: View {
               Text(move.name)
             }
           }
-        } else {
+        }
+
+        if viewStore.isLoading {
           HStack {
             Spacer()
+
             ProgressView()
               .progressViewStyle(.circular)
+
             Spacer()
           }
         }
@@ -64,6 +68,7 @@ public struct ViewPokemonView: View {
       store: store.scope(state: \.$nested, action: \.viewPokemon),
       destination: ViewPokemonView.init
     )
+    .alert(store: store.scope(state: \.$alert, action: \.alert))
   }
 }
 
@@ -73,6 +78,7 @@ struct ViewState: Equatable {
   var imageURL: URL?
 
   var fullData: FullData?
+  var isLoading: Bool
 
   struct FullData: Equatable {
     var evolutionChain: FullPokemon.EvolutionChain
@@ -85,12 +91,8 @@ struct ViewState: Equatable {
   }
 
   init(state: ViewPokemon.State) {
-    switch state.loadingState {
-    case .loading(let pokemon):
-      self.pokedexNumber = Self.pokedexNumber(pokemon.id.rawValue)
-      self.name = pokemon.name
-      self.imageURL = pokemon.thumbnailURL
-    case .loaded(let fullPokemon):
+    self.isLoading = state.isLoading
+    if let fullPokemon = state.fullPokemon {
       self.pokedexNumber = Self.pokedexNumber(fullPokemon.id.rawValue)
       self.name = fullPokemon.name
       self.imageURL = fullPokemon.imageURL
@@ -100,6 +102,10 @@ struct ViewState: Equatable {
         abilities: fullPokemon.abilities,
         moves: fullPokemon.moves
       )
+    } else {
+      self.pokedexNumber = Self.pokedexNumber(state.pokemon.id.rawValue)
+      self.name = state.pokemon.name
+      self.imageURL = state.pokemon.thumbnailURL
     }
   }
 }
@@ -109,12 +115,10 @@ struct ViewState: Equatable {
     ViewPokemonView(
       store: Store(
         initialState: ViewPokemon.State(
-          loadingState: .loading(
-            Pokemon(
-              id: 1,
-              name: "Bulbasaur",
-              thumbnailURL: URL(string: "https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png")
-            )
+          pokemon: Pokemon(
+            id: 1,
+            name: "Bulbasaur",
+            thumbnailURL: URL(string: "https://img.pokemondb.net/sprites/scarlet-violet/normal/bulbasaur.png")
           )
         )
       ) {
