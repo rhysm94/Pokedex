@@ -5,6 +5,7 @@
 //  Created by Rhys Morgan on 12/01/2024.
 //
 
+import AbilityList
 import ComposableArchitecture
 import PokemonList
 import SwiftUI
@@ -16,19 +17,26 @@ public struct PokedexView: View {
     self.store = store
   }
 
+  private typealias Tab = Pokedex.State.Tab
+
   public var body: some View {
     WithViewStore(store, observe: { $0 }) { viewStore in
       TabView(selection: viewStore.$currentTab) {
         PokemonListView(
           store: store.scope(state: \.pokemonList, action: \.pokemonList)
         )
-        .tag(Pokedex.State.Tab.pokemon)
+        .tag(Tab.pokemon)
         .tabItem {
           Text("Pokédex")
         }
-      }
-      .task {
-        await store.send(.view(.initialise)).finish()
+
+        AbilityListView(
+          store: store.scope(state: \.abilityList, action: \.abilityList)
+        )
+        .tag(Tab.abilities)
+        .tabItem {
+          Text("Abilities")
+        }
       }
     }
   }

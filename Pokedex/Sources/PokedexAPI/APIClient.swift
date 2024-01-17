@@ -14,6 +14,7 @@ public struct APIClient {
   public var getPokemon: (_ pokemonID: Int) async throws -> FullPokemon
 
   public var getAllAbilities: () async throws -> [Ability]
+  public var getAbility: (_ abilityID: Int) async throws -> FullAbility
 }
 
 extension APIClient: TestDependencyKey {

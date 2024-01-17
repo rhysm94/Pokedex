@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Pokemon: Hashable {
+public struct Pokemon: Hashable, Identifiable {
   public let id: Int
   public let name: String
   public let thumbnailURL: URL?
